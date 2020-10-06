@@ -10,4 +10,4 @@
 1. Click **[RELOAD PLUGINS]** button or restart WindowsGSM
 
 ### License
-This project is licensed under the MIT License - see the [LICENSE.md](https://https://github.com/DoctorBeardz/WindowsGSM.ProjectZomboid/blob/master/LICENSE) file for details
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/DoctorBeardz/WindowsGSM.ProjectZomboid/blob/main/LICENSE) file for details
