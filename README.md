@@ -13,7 +13,9 @@
 This is a quickly hacked together Project Zomboid Dedicated Server for WindowsGSM, the server settings do not work currently as it uses the default /Zomboid folder for the server settings and the default servertest.ini. You will have to edit that properly for it to run. This has been mostly done for myself to use the autostart and Discord features of WindowsGSM and is definitely not polished.
 
 Most code and inspiration taken from:
+
 [BattlefieldDuck](https://github.com/BattlefieldDuck/WindowsGSM.ARMA3)
+
 [1stian](https://github.com/1stian/WindowsGSM.Spigot)
 
 ### License
