@@ -1,6 +1,8 @@
 using System;
 using System.Text;
 using System.Diagnostics;
+using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 using WindowsGSM.Functions;
 using WindowsGSM.GameServer.Engine;
@@ -33,7 +35,7 @@ namespace WindowsGSM.Plugins
 
 
         // - Game server Fixed variables
-        public override string StartPath => "StartServer64.bat"; // Game server start path, for Project Zomboid, it is StartServer64.bat
+        public override string StartPath => "ProjectZomboid64.exe"; // Game server start path, for Project Zomboid, it is StartServer64.bat
         public string FullName = "Project Zomboid Server"; // Game server FullName
         public bool AllowsEmbedConsole = true;  // Does this server support output redirect?
         public int PortIncrements = 2; // This tells WindowsGSM how many ports should skip after installation
@@ -45,22 +47,28 @@ namespace WindowsGSM.Plugins
         public string QueryPort = "16262"; // Default query port
         public string Defaultmap = "Muldraugh, KY"; // Default map name
         public string Maxplayers = "64"; // Default maxplayers
-        public string Additional = ""; // Additional server start parameter
+        public string Additional = "-cachedir=.\\Zomboid"; // Additional server start parameter
 
 
         // - Create a default cfg for the game server after installation
-        public async void CreateServerCFG() { }
+        public async void CreateServerCFG()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"PublicName={_serverData.ServerName}");
+            sb.AppendLine($"DefaultPort={_serverData.ServerPort}");
+            sb.AppendLine($"RCONPassword=={ _serverData.GetRCONPassword()}");
+            File.WriteAllText(ServerPath.GetServersServerFiles(_serverData.ServerID, "servertest"), sb.ToString());
+        }
 
 
         // - Start server function, return its Process to WindowsGSM
         public async Task<Process> Start()
         {
             // Prepare start parameter
-            var param = new StringBuilder();
-            param.Append(string.IsNullOrWhiteSpace(_serverData.ServerPort) ? string.Empty : $" -port={_serverData.ServerPort}");
-            param.Append(string.IsNullOrWhiteSpace(_serverData.ServerName) ? string.Empty : $" -name=\"{_serverData.ServerName}\"");
+            var param = new StringBuilder($"{_serverData.ServerParam} -servername {_serverData.ServerName} -port {_serverData.ServerPort}");
             param.Append(string.IsNullOrWhiteSpace(_serverData.ServerParam) ? string.Empty : $" {_serverData.ServerParam}");
- 
+
+
             // Prepare Process
             var p = new Process
             {
