@@ -10,7 +10,7 @@
 1. Click **[RELOAD PLUGINS]** button or restart WindowsGSM
 
 ## Info
-This is a quickly hacked together Project Zomboid Dedicated Server for WindowsGSM. It will be necessary to edit the proper .ini files for all settings to be used properly. This has been mostly done for myself to use the autostart and Discord features of WindowsGSM and is definitely not polished.
+It will be necessary to edit the proper servertest.ini files for all the sandbox and server settings to be used properly.
 
 Most code and inspiration taken from:
 
@@ -22,17 +22,16 @@ Most code and inspiration taken from:
 
 What it will do:
 
-- Create a "Zomboid" folder in the main server file folder for centralized saves, no longer using the default Zomboid folder in %User%
-- Use the server name instead of the servertest.ini
-- Use the port set up in WindowsGSM
+- Create a "Zomboid" folder in the main server file folder for centralized saves and configs, no longer using the default Zomboid folder in %User%
+- Use the WindowsGSM port for the server
 
 What it will NOT do:
 
-- Set the server name
+- Set the public server name
 - Set the max player number
-- Set any maps, mods or tweaks
+- Set any maps, mods or any other settings
 
-All of that needs to be done by editing the .ini files in the "serverfiles\Zomboid\Server" folder
+All of that needs to be done by editing the servertest.ini files in the "serverfiles\Zomboid\Server" folder
 
 
 ### License
