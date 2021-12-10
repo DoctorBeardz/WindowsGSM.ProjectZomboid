@@ -28,7 +28,7 @@ namespace WindowsGSM.Plugins
 
 		// - Settings properties for SteamCMD installer
 		public override bool loginAnonymous => true; // Project Zomboid does not require a steam account to install the server, so loginAnonymous = true
-		public override string AppId => "380870"; // Game server appId, Project Zomboid is 380870
+		public override string AppId => "380870 -beta b41multiplayer"; // Game server appId, Project Zomboid is 380870
 
 		// - Game server Fixed variables
 		public override string StartPath => "StartServer64.bat"; // Game server start path, for Project Zomboid, it is StartServer64.bat
