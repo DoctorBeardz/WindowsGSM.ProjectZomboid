@@ -5,7 +5,7 @@
 [WindowsGSM](https://github.com/WindowsGSM/WindowsGSM) >= 1.21.0
 
 ## Installation
-1. Download the [latest](https://github.com/DoctorBeardz/WindowsGSM.ProjectZomboid/releases/latest) release
+1. Download the [latest](https://github.com/forsytheda/WindowsGSM.ProjectZomboid/releases/latest) release
 1. Move **ProjectZomboid.cs** folder to **plugins** folder
 1. Click **[RELOAD PLUGINS]** button or restart WindowsGSM
 
@@ -13,6 +13,8 @@
 It will be necessary to edit the proper servertest.ini files for all the sandbox and server settings to be used properly.
 
 Most code and inspiration taken from:
+
+[DoctorBeardz](https://github.com/DoctorBeardz/WindowsGSM.ProjectZomboid)
 
 [BattlefieldDuck](https://github.com/BattlefieldDuck/WindowsGSM.ARMA3)
 
