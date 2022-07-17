@@ -49,7 +49,7 @@ namespace WindowsGSM.Plugins
 		{
 			var startScript = File.ReadAllText(ServerPath.GetServersServerFiles(_serverData.ServerID, "StartServer64.bat")); // Fetches content of old startup script.
 			var sb = new StringBuilder(startScript);
-			sb.Replace("-Dzomboid.znetlog=1", "-Dzomboid.znetlog=1 -Duser.home=..\\..\\configs"); // Adds a Java parameter to change home location.
+			sb.Replace("-Dzomboid.znetlog=1", "-Dzomboid.znetlog=1 -Duser.home=..\\.."); // Adds a Java parameter to change home location.
 			File.WriteAllText(ServerPath.GetServersServerFiles(_serverData.ServerID, "StartServer64.bat"), sb.ToString()); // Saves new startup script, replacing the old.
 		}
 
