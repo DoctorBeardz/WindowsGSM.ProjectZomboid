@@ -31,7 +31,7 @@ What it will NOT do:
 - Set the max player number
 - Set any maps, mods or any other settings
 
-All of that needs to be done by editing the servertest.ini files in the "serverfiles\Zomboid\Server" folder
+All of that needs to be done by editing the servertest.ini files in the "WindowsGSM\servers\\<server id\>\Zomboid\Server" folder
 
 
 ### License

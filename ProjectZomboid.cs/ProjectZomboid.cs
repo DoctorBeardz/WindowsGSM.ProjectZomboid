@@ -17,7 +17,7 @@ namespace WindowsGSM.Plugins
 			name = "WindowsGSM.ProjectZomboid", // WindowsGSM.XXXX
 			author = "Beard",
 			description = "🧩 WindowsGSM plugin for supporting Project Zomboid Dedicated Server",
-			version = "1.4",
+			version = "1.5",
 			url = "https://github.com/DoctorBeardz/WindowsGSM.ProjectZomboid", // Github repository link (Best practice)
 			color = "#38CDD4" // Color Hex
 		};
@@ -42,14 +42,19 @@ namespace WindowsGSM.Plugins
 		public string QueryPort = "16261"; // Default query port
 		public string Defaultmap = "Muldraugh, KY"; // Default map name
 		public string Maxplayers = "64"; // Default maxplayers
-		public string Additional = "-cachedir=.\\Zomboid"; // Additional server start parameter
+		public string Additional = ""; // Additional server start parameter
 
 		// - Create a default cfg for the game server after installation
-		public async void CreateServerCFG() { }
+		public async void CreateServerCFG()
+		{
+			var startScript = File.ReadAllText(ServerPath.GetServersServerFiles(_serverData.ServerID, "StartServer64.bat")); // Fetches content of old startup script.
+			var sb = new StringBuilder(startScript);
+			sb.Replace("-Dzomboid.znetlog=1", "-Dzomboid.znetlog=1 -Duser.home=.."); // Adds a Java parameter to change home location.
+			File.WriteAllText(ServerPath.GetServersServerFiles(_serverData.ServerID, "StartServer64.bat"), sb.ToString()); // Saves new startup script, replacing the old.
+		}
 
 		// - Start server function, return its Process to WindowsGSM
 		public async Task<Process> Start()
-
 		{
 			// Prepare start parameter
 			var param = new StringBuilder($"{_serverData.ServerParam} -port {_serverData.ServerPort}");
