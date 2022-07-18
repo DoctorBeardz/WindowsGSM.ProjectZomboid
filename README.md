@@ -11,6 +11,7 @@
 
 ## Info
 It will be necessary to edit the proper servertest.ini files for all the sandbox and server settings to be used properly.
+After launching the server, make sure to Toggle open the server console and write your custom "admin" account password to the console. You only need to do this once when the server is launched for the first time.
 
 Most code and inspiration taken from:
 
