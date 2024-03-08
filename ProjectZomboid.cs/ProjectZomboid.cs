@@ -49,82 +49,86 @@ namespace WindowsGSM.Plugins
 		{
 		}
 
-		// - Start server function, return its Process to WindowsGSM
-		public async Task<Process> Start()
-		{
-			var param = new StringBuilder();
-			param.Append("\"-Djava.awt.headless=true\" \"-Dzomboid.steam=1\" \"-Dzomboid.znetlog=1\" \"-Duser.home=..\"");
-			param.Append(" \"-XX:+UseZGC\" \"-XX:-CreateCoredumpOnCrash\" \"-XX:-OmitStackTraceInFastThrow\"");
-			//if you have Memory issues you can try to edit -Xms16g -Xmx16g to better suite your system
+        private string GetParameters()
+        {
+            var param = new StringBuilder();
+            param.Append("\"-Djava.awt.headless=true\" \"-Dzomboid.steam=1\" \"-Dzomboid.znetlog=1\" \"-Duser.home=..\"");
+            param.Append(" \"-XX:+UseZGC\" \"-XX:-CreateCoredumpOnCrash\" \"-XX:-OmitStackTraceInFastThrow\"");
+            //if you have Memory issues you can try to edit -Xms16g -Xmx16g to better suite your system
             param.Append(" -Xms16g -Xmx16g \"-Djava.library.path=natives/;natives/win64/;.\" \"-Dstatistic=0\"");
             //java classpath copied from startScript
-			param.Append(" -cp \"java/istack-commons-runtime.jar;java/jassimp.jar;java/javacord-2.0.17-shaded.jar;"+
-				"java/javax.activation-api.jar;java/jaxb-api.jar;java/jaxb-runtime.jar;java/lwjgl.jar;"+
-				"java/lwjgl-natives-windows.jar;java/lwjgl-glfw.jar;java/lwjgl-glfw-natives-windows.jar;"+
-				"java/lwjgl-jemalloc.jar;java/lwjgl-jemalloc-natives-windows.jar;java/lwjgl-opengl.jar;"+
-				"java/lwjgl-opengl-natives-windows.jar;java/lwjgl_util.jar;java/sqlite-jdbc-3.27.2.1.jar;"+
-				"java/trove-3.0.3.jar;java/uncommons-maths-1.2.3.jar;java/commons-compress-1.18.jar;java/\"");
-			//actual start class
-			param.Append(" zombie.network.GameServer");
-			//add custom parameters and ports
+            param.Append(" -cp \"java/istack-commons-runtime.jar;java/jassimp.jar;java/javacord-2.0.17-shaded.jar;" +
+                "java/javax.activation-api.jar;java/jaxb-api.jar;java/jaxb-runtime.jar;java/lwjgl.jar;" +
+                "java/lwjgl-natives-windows.jar;java/lwjgl-glfw.jar;java/lwjgl-glfw-natives-windows.jar;" +
+                "java/lwjgl-jemalloc.jar;java/lwjgl-jemalloc-natives-windows.jar;java/lwjgl-opengl.jar;" +
+                "java/lwjgl-opengl-natives-windows.jar;java/lwjgl_util.jar;java/sqlite-jdbc-3.27.2.1.jar;" +
+                "java/trove-3.0.3.jar;java/uncommons-maths-1.2.3.jar;java/commons-compress-1.18.jar;java/\"");
+            //actual start class
+            param.Append(" zombie.network.GameServer");
+            //add custom parameters and ports
             param.Append($" -port {_serverData.ServerPort} {_serverData.ServerParam} ");
+            return param.ToString();
+        }
 
-			// Prepare Process
-			var p = new Process
-			{
-				StartInfo =
-				{
-					WorkingDirectory = ServerPath.GetServersServerFiles(_serverData.ServerID),
-					FileName = ServerPath.GetServersServerFiles(_serverData.ServerID, StartPath),
-					Arguments = param.ToString(),
-					WindowStyle = ProcessWindowStyle.Minimized,
-					UseShellExecute = false,
-				},
-				EnableRaisingEvents = true,
-			};
+        // - Start server function, return its Process to WindowsGSM
+        public async Task<Process> Start()
+        {
+            // Prepare Process
+            var p = new Process
+            {
+                StartInfo =
+                {
+                    WorkingDirectory = ServerPath.GetServersServerFiles(_serverData.ServerID),
+                    FileName = ServerPath.GetServersServerFiles(_serverData.ServerID, StartPath),
+                    Arguments = GetParameters(),
+                    WindowStyle = ProcessWindowStyle.Minimized,
+                    UseShellExecute = false,
+                },
+                EnableRaisingEvents = true,
+            };
 
-			// Set up Redirect Input and Output to WindowsGSM Console if EmbedConsole is on
-			if (AllowsEmbedConsole)
-			{
-				p.StartInfo.CreateNoWindow = true;
-				p.StartInfo.RedirectStandardInput = true;
-				p.StartInfo.RedirectStandardOutput = true;
-				p.StartInfo.RedirectStandardError = true;
-				var serverConsole = new ServerConsole(_serverData.ServerID);
-				p.OutputDataReceived += serverConsole.AddOutput;
-				p.ErrorDataReceived += serverConsole.AddOutput;
+            // Set up Redirect Input and Output to WindowsGSM Console if EmbedConsole is on
+            if (AllowsEmbedConsole)
+            {
+                p.StartInfo.CreateNoWindow = true;
+                p.StartInfo.RedirectStandardInput = true;
+                p.StartInfo.RedirectStandardOutput = true;
+                p.StartInfo.RedirectStandardError = true;
+                var serverConsole = new ServerConsole(_serverData.ServerID);
+                p.OutputDataReceived += serverConsole.AddOutput;
+                p.ErrorDataReceived += serverConsole.AddOutput;
 
-				// Start Process
-				try
-				{
-					p.Start();
-				}
-				catch (Exception e)
-				{
-					Error = e.Message;
-					return null; // return null if fail to start
-				}
+                // Start Process
+                try
+                {
+                    p.Start();
+                }
+                catch (Exception e)
+                {
+                    Error = e.Message;
+                    return null; // return null if fail to start
+                }
 
-				p.BeginOutputReadLine();
-				p.BeginErrorReadLine();
-				return p;
-			}
+                p.BeginOutputReadLine();
+                p.BeginErrorReadLine();
+                return p;
+            }
 
-			// Start Process
-			try
-			{
-				p.Start();
-				return p;
-			}
-			catch (Exception e)
-			{
-				Error = e.Message;
-				return null; // return null if fail to start
-			}
-		}
+            // Start Process
+            try
+            {
+                p.Start();
+                return p;
+            }
+            catch (Exception e)
+            {
+                Error = e.Message;
+                return null; // return null if fail to start
+            }
+        }
 
-		// - Stop server function
-		public async Task Stop(Process p)
+        // - Stop server function
+        public async Task Stop(Process p)
 		{
 			await Task.Run(() =>
 			{
