@@ -47,23 +47,25 @@ namespace WindowsGSM.Plugins
 		// - Create a default cfg for the game server after installation
 		public async void CreateServerCFG()
 		{
-			var startScript = File.ReadAllText(ServerPath.GetServersServerFiles(_serverData.ServerID, "StartServer64.bat")); // Fetches content of old startup script.
-			var sb = new StringBuilder(startScript);
-			sb.Replace("-Dzomboid.znetlog=1", "-Dzomboid.znetlog=1 -Duser.home=.."); // Adds a Java parameter to change home location.
-			File.WriteAllText(ServerPath.GetServersServerFiles(_serverData.ServerID, "StartServer64.bat"), sb.ToString()); // Saves new startup script, replacing the old.
 		}
 
 		// - Start server function, return its Process to WindowsGSM
 		public async Task<Process> Start()
 		{
 			var param = new StringBuilder();
-			param.Append("\"-Djava.awt.headless=true\" \"-Dzomboid.steam=1\" \"-Dzomboid.znetlog=1\" \"-Duser.home=..\" \"-XX:+UseZGC\" \"-XX:-CreateCoredumpOnCrash\" \"-XX:-OmitStackTraceInFastThrow\"");
-            
-			//if you have Memory issues you can try to edit -Xms16g -Xmx16g to better suite your system (if you only have 16g you maybe should adjust it to 8g or even 4g if you have other servers running)
+			param.Append("\"-Djava.awt.headless=true\" \"-Dzomboid.steam=1\" \"-Dzomboid.znetlog=1\" \"-Duser.home=..\"");
+			param.Append(" \"-XX:+UseZGC\" \"-XX:-CreateCoredumpOnCrash\" \"-XX:-OmitStackTraceInFastThrow\"");
+			//if you have Memory issues you can try to edit -Xms16g -Xmx16g to better suite your system
             param.Append(" -Xms16g -Xmx16g \"-Djava.library.path=natives/;natives/win64/;.\"");
             //java classpath copied from startScript
-			param.Append(" -cp \"java/istack-commons-runtime.jar;java/jassimp.jar;java/javacord-2.0.17-shaded.jar;java/javax.activation-api.jar;java/jaxb-api.jar;java/jaxb-runtime.jar;java/lwjgl.jar;java/lwjgl-natives-windows.jar;java/lwjgl-glfw.jar;java/lwjgl-glfw-natives-windows.jar;java/lwjgl-jemalloc.jar;java/lwjgl-jemalloc-natives-windows.jar;java/lwjgl-opengl.jar;java/lwjgl-opengl-natives-windows.jar;java/lwjgl_util.jar;java/sqlite-jdbc-3.27.2.1.jar;java/trove-3.0.3.jar;java/uncommons-maths-1.2.3.jar;java/commons-compress-1.18.jar;java/\"");
-            param.Append(" zombie.network.GameServer \"-statistic 0\"");
+			param.Append(" -cp \"java/istack-commons-runtime.jar;java/jassimp.jar;java/javacord-2.0.17-shaded.jar;"+
+				"java/javax.activation-api.jar;java/jaxb-api.jar;java/jaxb-runtime.jar;java/lwjgl.jar;"+
+				"java/lwjgl-natives-windows.jar;java/lwjgl-glfw.jar;java/lwjgl-glfw-natives-windows.jar;"+
+				"java/lwjgl-jemalloc.jar;java/lwjgl-jemalloc-natives-windows.jar;java/lwjgl-opengl.jar;"+
+				"java/lwjgl-opengl-natives-windows.jar;java/lwjgl_util.jar;java/sqlite-jdbc-3.27.2.1.jar;"+
+				"java/trove-3.0.3.jar;java/uncommons-maths-1.2.3.jar;java/commons-compress-1.18.jar;java/\"");
+			//actual start class
+			param.Append(" zombie.network.GameServer \"-statistic 0\"");
 			//add custom parameters and ports
             param.Append($" -port {_serverData.ServerPort} {_serverData.ServerParam} ");
 
