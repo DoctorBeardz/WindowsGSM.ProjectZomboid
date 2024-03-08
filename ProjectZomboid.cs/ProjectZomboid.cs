@@ -56,7 +56,7 @@ namespace WindowsGSM.Plugins
 			param.Append("\"-Djava.awt.headless=true\" \"-Dzomboid.steam=1\" \"-Dzomboid.znetlog=1\" \"-Duser.home=..\"");
 			param.Append(" \"-XX:+UseZGC\" \"-XX:-CreateCoredumpOnCrash\" \"-XX:-OmitStackTraceInFastThrow\"");
 			//if you have Memory issues you can try to edit -Xms16g -Xmx16g to better suite your system
-            param.Append(" -Xms16g -Xmx16g \"-Djava.library.path=natives/;natives/win64/;.\"");
+            param.Append(" -Xms16g -Xmx16g \"-Djava.library.path=natives/;natives/win64/;.\" \"-Dstatistic=0\"");
             //java classpath copied from startScript
 			param.Append(" -cp \"java/istack-commons-runtime.jar;java/jassimp.jar;java/javacord-2.0.17-shaded.jar;"+
 				"java/javax.activation-api.jar;java/jaxb-api.jar;java/jaxb-runtime.jar;java/lwjgl.jar;"+
@@ -65,7 +65,7 @@ namespace WindowsGSM.Plugins
 				"java/lwjgl-opengl-natives-windows.jar;java/lwjgl_util.jar;java/sqlite-jdbc-3.27.2.1.jar;"+
 				"java/trove-3.0.3.jar;java/uncommons-maths-1.2.3.jar;java/commons-compress-1.18.jar;java/\"");
 			//actual start class
-			param.Append(" zombie.network.GameServer \"-statistic 0\"");
+			param.Append(" zombie.network.GameServer");
 			//add custom parameters and ports
             param.Append($" -port {_serverData.ServerPort} {_serverData.ServerParam} ");
 
