@@ -31,7 +31,7 @@ namespace WindowsGSM.Plugins
 			name = "WindowsGSM.ProjectZomboid", // WindowsGSM.XXXX
 			author = "Beard",
 			description = "🧩 WindowsGSM plugin for supporting Project Zomboid Dedicated Server",
-			version = "1.5",
+			version = "1.7",
 			url = "https://github.com/DoctorBeardz/WindowsGSM.ProjectZomboid", // Github repository link (Best practice)
 			color = "#38CDD4" // Color Hex
 		};
