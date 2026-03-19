@@ -78,8 +78,8 @@ namespace WindowsGSM.Plugins
             {
                 StartInfo =
                 {
-                    WorkingDirectory = ServerPath.GetServersServerFiles(_serverData.ServerID),
-                    FileName = ServerPath.GetServersServerFiles(_serverData.ServerID, StartPath),
+                    WorkingDirectory = ServerPath.GetServersServerFiles(serverData.ServerID),
+                    FileName = ServerPath.GetServersServerFiles(serverData.ServerID, StartPath),
                     Arguments = GetParameters(),
                     WindowStyle = ProcessWindowStyle.Minimized,
                     UseShellExecute = false,
