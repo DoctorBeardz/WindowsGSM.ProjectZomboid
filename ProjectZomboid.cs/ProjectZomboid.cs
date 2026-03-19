@@ -23,8 +23,7 @@ namespace WindowsGSM.Plugins
 		};
 
 		// - Standard Constructor and properties
-		public ProjectZomboid(ServerConfig serverData) : base(serverData) => base.serverData = _serverData = serverData;
-		private readonly ServerConfig _serverData; // Store server start metadata, such as start ip, port, start param, etc
+		public ProjectZomboid(ServerConfig serverData) : base(serverData) => base.serverData = serverData;
 
 		// - Settings properties for SteamCMD installer
 		public override bool loginAnonymous => true; // Project Zomboid does not require a steam account to install the server, so loginAnonymous = true
@@ -66,7 +65,7 @@ namespace WindowsGSM.Plugins
             //actual start class
             param.Append(" zombie.network.GameServer");
             //add custom parameters and ports
-            param.Append($" -port {_serverData.ServerPort} {_serverData.ServerParam} ");
+            param.Append($" -port {serverData.ServerPort} {serverData.ServerParam} ");
             return param.ToString();
         }
 
@@ -88,13 +87,13 @@ namespace WindowsGSM.Plugins
             };
 
             // Set up Redirect Input and Output to WindowsGSM Console if EmbedConsole is on
-            if (AllowsEmbedConsole)
+            if (serverData.EmbedConsole)
             {
                 p.StartInfo.CreateNoWindow = true;
                 p.StartInfo.RedirectStandardInput = true;
                 p.StartInfo.RedirectStandardOutput = true;
                 p.StartInfo.RedirectStandardError = true;
-                var serverConsole = new ServerConsole(_serverData.ServerID);
+                var serverConsole = new ServerConsole(serverData.ServerID);
                 p.OutputDataReceived += serverConsole.AddOutput;
                 p.ErrorDataReceived += serverConsole.AddOutput;
 
