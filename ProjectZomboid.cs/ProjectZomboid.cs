@@ -51,7 +51,8 @@ namespace WindowsGSM.Plugins
         private string GetParameters()
         {
             var param = new StringBuilder();
-            param.Append("\"-Djava.awt.headless=true\" \"-Dzomboid.steam=1\" \"-Dzomboid.znetlog=1\" \"-Duser.home=..\"");
+            DirectoryInfo homePath = new DirectoryInfo(ServerPath.GetServersServerFiles(serverData.ServerID));
+            param.Append($"\"-Djava.awt.headless=true\" \"-Dzomboid.steam=1\" \"-Dzomboid.znetlog=1\" \"-Duser.home={homePath.Parent.FullName}\"");
             param.Append(" \"-XX:+UseZGC\" \"-XX:-CreateCoredumpOnCrash\" \"-XX:-OmitStackTraceInFastThrow\"");
             //if you have Memory issues you can try to edit -Xms16g -Xmx16g to better suite your system
             param.Append(" -Xms16g -Xmx16g \"-Djava.library.path=natives/;natives/win64/;.\" \"-Dstatistic=0\"");
