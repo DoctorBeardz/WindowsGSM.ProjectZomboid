@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using WindowsGSM.Functions;
@@ -10,9 +11,22 @@ using WindowsGSM.GameServer.Query;
 namespace WindowsGSM.Plugins
 {
 	public class ProjectZomboid : SteamCMDAgent // SteamCMDAgent is used because Project Zomboid relies on SteamCMD for installation and update process
-	{
-		// - Plugin Details
-		public Plugin Plugin = new Plugin
+    {
+        #region preparation of the WindowsAPI to send process shutdown signals
+        internal const int CTRL_C_EVENT = 0;
+        [DllImport("kernel32.dll")]
+        internal static extern bool GenerateConsoleCtrlEvent(uint dwCtrlEvent, uint dwProcessGroupId);
+        [DllImport("kernel32.dll", SetLastError = true)]
+        internal static extern bool AttachConsole(uint dwProcessId);
+        [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
+        internal static extern bool FreeConsole();
+        [DllImport("kernel32.dll")]
+        static extern bool SetConsoleCtrlHandler(ConsoleCtrlDelegate HandlerRoutine, bool Add);
+        delegate Boolean ConsoleCtrlDelegate(uint CtrlType);
+        #endregion
+
+        // - Plugin Details
+        public Plugin Plugin = new Plugin
 		{
 			name = "WindowsGSM.ProjectZomboid", // WindowsGSM.XXXX
 			author = "Beard",
@@ -132,17 +146,31 @@ namespace WindowsGSM.Plugins
 		{
 			await Task.Run(() =>
 			{
-				if (p.StartInfo.RedirectStandardInput)
-				{
-					// Send "quit" command to StandardInput stream if EmbedConsole is on
-					p.StandardInput.WriteLine("quit");
-				}
-				else
-				{
-					// Send "quit" command to game server process MainWindow
-					ServerConsole.SendMessageToMainWindow(p.MainWindowHandle, "quit");
-				}
-			});
+                if (!SendStopSignal(p))
+                    p.Kill();
+            });
 		}
-	}
+
+        //sends the stop signal to the process
+        public static bool SendStopSignal(Process p)
+        {
+            if (AttachConsole((uint)p.Id))
+            {
+                SetConsoleCtrlHandler(null, true);
+                try
+                {
+                    if (!GenerateConsoleCtrlEvent(CTRL_C_EVENT, 0))
+                        return false;
+                    p.WaitForExit(10000);
+                }
+                finally
+                {
+                    SetConsoleCtrlHandler(null, false);
+                    FreeConsole();
+                }
+                return true;
+            }
+            return false;
+        }
+    }
 }
