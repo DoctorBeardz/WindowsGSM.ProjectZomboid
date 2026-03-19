@@ -151,7 +151,9 @@ namespace WindowsGSM.Plugins
 			await Task.Run(() =>
 			{
                 if (!SendStopSignal(p))
+                {
                     p.Kill();
+                }
             });
 		}
 
@@ -164,7 +166,9 @@ namespace WindowsGSM.Plugins
                 try
                 {
                     if (!GenerateConsoleCtrlEvent(CTRL_C_EVENT, 0))
+                    {
                         return false;
+                    }
                     p.WaitForExit(10000);
                 }
                 finally
